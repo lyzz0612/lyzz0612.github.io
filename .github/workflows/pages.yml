@@ -56,9 +56,12 @@ jobs:
           destination: ./_site
 
       # Jekyll 生成 .html 后，再把仓库里的源文件合并进 _site（供浏览器直接访问 .md 等），排除工程目录
+      # Docker 内 Jekyll 可能以 root 写 _site；runner 上 rsync -a 会 chown/chgrp 失败，需先接管目录并关闭属主同步
       - name: Merge repo sources into site (exclude tooling)
         run: |
-          rsync -a \
+          sudo chown -R "$(whoami)" _site
+          chmod -R u+rwX _site
+          rsync -a --no-owner --no-group \
             --exclude='.git/' \
             --exclude='.github/' \
             --exclude='scripts/' \

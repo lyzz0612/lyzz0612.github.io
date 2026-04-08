@@ -3,6 +3,7 @@ title: "Agent文档平台"
 description: "lyzz0612.github.io：GitHub Pages 站点说明、llms.txt 自动生成规则与维护约定。"
 date: 2026-04-08
 layout: default
+permalink: /
 ---
 
 # Agent文档平台

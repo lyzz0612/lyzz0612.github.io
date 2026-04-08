@@ -1,3 +1,10 @@
+---
+title: "lyzz0612.github.io"
+description: "GitHub Pages 站点说明：面向人类与 Agent 的仓库导览、维护约定与文章列表索引。"
+date: 2026-04-08
+layout: default
+---
+
 # lyzz0612.github.io
 
 本仓库为 [GitHub Pages](https://pages.github.com/) 站点源码。**本文档同时面向人类读者与自动化 Agent**（代码助手、CI、检索工具等）：人类可据此了解站点结构与内容索引；Agent 可据此定位页面、更新列表、避免重复劳动。若你正在协助维护本仓库，请先阅读本节与下方「文章列表」，再修改对应文件。

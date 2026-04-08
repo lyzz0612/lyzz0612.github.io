@@ -1,0 +1,44 @@
+# 扫描仓库文档生成 /llms.txt，直链基址固定为 https://lyzz0612.github.io/
+name: Generate llms.txt
+
+on:
+  push:
+    branches: [master, main]
+    paths:
+      - "**/*.md"
+      - "**/*.html"
+      - "**/*.htm"
+      - "scripts/generate_llms_txt.py"
+      - ".github/workflows/generate-llms-txt.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: llms-txt-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Generate llms.txt
+        run: python3 scripts/generate_llms_txt.py
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add llms.txt
+          if git diff --staged --quiet; then
+            echo "No changes to llms.txt"
+            exit 0
+          fi
+          git commit -m "chore: regenerate llms.txt"
+          git push

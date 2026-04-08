@@ -1,6 +1,8 @@
 ---
 name: PSD切图的技能
 description: 使用内置 psd_slicing_tools.py 从 PSD 导出可复用 UI 素材。适用于用户提供 PSD、要求切图或按图层拆图/批量导出、导出按钮/背景/图标等素材，或需要「图层-功能-切图」对应表等场景。
+date: 2026-04-08
+last_modified: 2026-04-08
 ---
 
 # PSD 切图工作流

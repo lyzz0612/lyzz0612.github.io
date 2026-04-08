@@ -144,22 +144,28 @@ def page_title(path: Path) -> str:
     return path.name
 
 
-def page_date(path: Path) -> str:
-    """front matter 的 date 字段；无则返回「—」。"""
+def _fm_field(path: Path, key: str) -> str:
+    """读取 front matter 中指定字段，无则返回「—」。"""
     try:
         text = path.read_text(encoding="utf-8", errors="replace")
     except OSError:
         return "—"
     suf = path.suffix.lower()
-    if suf == ".md":
+    if suf in (".md", ".html", ".htm"):
         fm, _ = split_front_matter(text)
-        d = (fm.get("date") or "").strip()
-        return d if d else "—"
-    if suf in {".html", ".htm"}:
-        fm, _ = split_front_matter(text)
-        d = (fm.get("date") or "").strip()
-        return d if d else "—"
+        v = (fm.get(key) or "").strip()
+        return v if v else "—"
     return "—"
+
+
+def page_date(path: Path) -> str:
+    """front matter 的 date 字段。"""
+    return _fm_field(path, "date")
+
+
+def page_last_modified(path: Path) -> str:
+    """front matter 的 last_modified 字段。"""
+    return _fm_field(path, "last_modified")
 
 
 def page_url(rel_posix: str, base_url: str) -> str:

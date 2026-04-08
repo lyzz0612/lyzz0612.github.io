@@ -2,6 +2,7 @@
 title: "Agent文档平台"
 description: "lyzz0612.github.io：GitHub Pages 站点说明、llms.txt 自动生成规则与维护约定。"
 date: 2026-04-08
+last_modified: 2026-04-08
 layout: default
 permalink: /
 ---
@@ -20,11 +21,10 @@ permalink: /
 
 ## 文章列表（CI 自动同步）
 
-> 下表由 [`scripts/update_readme_articles.py`](scripts/update_readme_articles.py) 按与 `llms.txt` 相同的收录规则生成；推送 `main` / `master` 时由 [`.github/workflows/pages.yml`](.github/workflows/pages.yml) 更新并提交。**对外机器可读索引仍以站点根路径 [`/llms.txt`](https://lyzz0612.github.io/llms.txt) 为准**。
+> 下表由 [`scripts/update_readme_articles.py`](scripts/update_readme_articles.py) 按与 `llms.txt` 相同的收录规则生成；推送 `main` / `master` 时由 [`.github/workflows/pages.yml`](.github/workflows/pages.yml) 更新并提交。
 
 <!-- doc-index:article-table -->
-| 标题 | 路径或 URL | 日期 |
-|------|------------|------|
-| Agent文档平台 | [index.md](https://lyzz0612.github.io/index.md) | — |
-| PSD 切图工作流 | [skills/psd-slicing/SKILL.md](https://lyzz0612.github.io/skills/psd-slicing/SKILL.md) | — |
+| 标题 | 路径或 URL | 日期 | 修改时间 |
+|------|------------|------|----------|
+| PSD 切图工作流 | [skills/psd-slicing/SKILL.md](https://lyzz0612.github.io/skills/psd-slicing/SKILL.md) | 2026-04-08 | 2026-04-08 |
 <!-- /doc-index:article-table -->

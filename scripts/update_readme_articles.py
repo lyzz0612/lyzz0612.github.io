@@ -18,6 +18,7 @@ from doc_index import (  # noqa: E402
     group_by_directory,
     iter_doc_files,
     page_date,
+    page_last_modified,
     page_title,
     page_url,
 )
@@ -35,11 +36,11 @@ def _escape_cell(s: str) -> str:
 
 def build_table_markdown(grouped: list[tuple[str, list[Path]]]) -> str:
     lines = [
-        "| 标题 | 路径或 URL | 日期 |",
-        "|------|------------|------|",
+        "| 标题 | 路径或 URL | 日期 | 修改时间 |",
+        "|------|------------|------|----------|",
     ]
     if not grouped:
-        lines.append("| （暂无） | — | — |")
+        lines.append("| （暂无） | — | — | — |")
         return "\n".join(lines)
 
     for _dir_key, paths in grouped:
@@ -48,7 +49,8 @@ def build_table_markdown(grouped: list[tuple[str, list[Path]]]) -> str:
             title = _escape_cell(page_title(f))
             url = page_url(rel, BASE_URL)
             date = _escape_cell(page_date(f))
-            lines.append(f"| {title} | [{rel}]({url}) | {date} |")
+            modified = _escape_cell(page_last_modified(f))
+            lines.append(f"| {title} | [{rel}]({url}) | {date} | {modified} |")
     return "\n".join(lines)
 
 

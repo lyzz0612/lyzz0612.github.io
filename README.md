@@ -24,5 +24,6 @@ layout: default
 <!-- doc-index:article-table -->
 | 标题 | 路径或 URL | 日期 |
 |------|------------|------|
+| Agent文档平台 | [index.md](https://lyzz0612.github.io/index.md) | — |
 | PSD 切图工作流 | [skills/psd-slicing/SKILL.md](https://lyzz0612.github.io/skills/psd-slicing/SKILL.md) | — |
 <!-- /doc-index:article-table -->

@@ -55,9 +55,20 @@ jobs:
           source: ./
           destination: ./_site
 
-      # Jekyll 把 README 编成首页后，再保留一份源 Markdown 供 /README.md 与 Agent 拉取
-      - name: Publish README.md source alongside site
-        run: cp README.md _site/README.md
+      # Jekyll 生成 .html 后，再把仓库里的源文件合并进 _site（供浏览器直接访问 .md 等），排除工程目录
+      - name: Merge repo sources into site (exclude tooling)
+        run: |
+          rsync -a \
+            --exclude='.git/' \
+            --exclude='.github/' \
+            --exclude='scripts/' \
+            --exclude='_site/' \
+            --exclude='Gemfile' \
+            --exclude='Gemfile.lock' \
+            --exclude='.jekyll-cache/' \
+            --exclude='vendor/' \
+            --exclude='_config.yml' \
+            ./ _site/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v4

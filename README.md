@@ -9,7 +9,7 @@ permalink: /
 
 # Agent文档平台
 
-本站（浏览器）：**[https://agent-doc.skyup.top/](https://agent-doc.skyup.top/)**；同源 Markdown 源文件 **[README.md](https://agent-doc.skyup.top/README.md)** 供 Agent / `llms.txt` 拉取。内容同时面向人类读者与自动化 Agent（代码助手、CI、检索工具等）。
+本站（浏览器）：**[https://agent-doc.skyup.top/](https://agent-doc.skyup.top/)**。构建时除 `scripts/`、`.github/` 等工程目录外，仓库内源文件（各路径下的 `.md`、`llms.txt`、`CNAME` 等）会一并发布，可与 Jekyll 生成的 `.html` 同源访问；根目录 **[README.md](https://agent-doc.skyup.top/README.md)** 供 Agent / `llms.txt` 拉取。内容同时面向人类读者与自动化 Agent（代码助手、CI、检索工具等）。
 
 ## llms.txt（大模型索引）
 

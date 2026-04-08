@@ -24,7 +24,7 @@ permalink: /
 > 下表由 [`scripts/update_readme_articles.py`](scripts/update_readme_articles.py) 按与 `llms.txt` 相同的收录规则生成；推送 `main` / `master` 时由 [`.github/workflows/pages.yml`](.github/workflows/pages.yml) 更新并提交。
 
 <!-- doc-index:article-table -->
-| 标题 | 路径或 URL | 日期 | 修改时间 |
-|------|------------|------|----------|
-| PSD 切图工作流 | [skills/psd-slicing/SKILL.md](https://lyzz0612.github.io/skills/psd-slicing/SKILL.md) | 2026-04-08 | 2026-04-08 |
+| 标题 | 路径或 URL | 修改时间 |
+|------|------------|----------|
+| PSD 切图工作流 | [skills/psd-slicing/SKILL.md](https://lyzz0612.github.io/skills/psd-slicing/SKILL.md) | 2026-04-08 |
 <!-- /doc-index:article-table -->

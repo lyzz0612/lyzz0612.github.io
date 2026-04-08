@@ -15,9 +15,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from doc_index import (  # noqa: E402
     ROOT,
-    group_by_directory,
     iter_doc_files,
-    page_date,
     page_last_modified,
     page_title,
     page_url,
@@ -34,23 +32,23 @@ def _escape_cell(s: str) -> str:
     return s.replace("|", "\\|").replace("\n", " ")
 
 
-def build_table_markdown(grouped: list[tuple[str, list[Path]]]) -> str:
+def build_table_markdown(files: list[Path]) -> str:
     lines = [
-        "| 标题 | 路径或 URL | 日期 | 修改时间 |",
-        "|------|------------|------|----------|",
+        "| 标题 | 路径或 URL | 修改时间 |",
+        "|------|------------|----------|",
     ]
-    if not grouped:
-        lines.append("| （暂无） | — | — | — |")
+    if not files:
+        lines.append("| （暂无） | — | — |")
         return "\n".join(lines)
 
-    for _dir_key, paths in grouped:
-        for f in paths:
-            rel = f.relative_to(ROOT).as_posix()
-            title = _escape_cell(page_title(f))
-            url = page_url(rel, BASE_URL)
-            date = _escape_cell(page_date(f))
-            modified = _escape_cell(page_last_modified(f))
-            lines.append(f"| {title} | [{rel}]({url}) | {date} | {modified} |")
+    # 按 last_modified 倒序，无日期的排最后
+    files_sorted = sorted(files, key=lambda f: page_last_modified(f), reverse=True)
+    for f in files_sorted:
+        rel = f.relative_to(ROOT).as_posix()
+        title = _escape_cell(page_title(f))
+        url = page_url(rel, BASE_URL)
+        modified = _escape_cell(page_last_modified(f))
+        lines.append(f"| {title} | [{rel}]({url}) | {modified} |")
     return "\n".join(lines)
 
 
@@ -73,8 +71,7 @@ def main() -> int:
         for f in iter_doc_files(ROOT)
         if f.resolve() != (ROOT / "README.md").resolve()
     ]
-    grouped = group_by_directory(files)
-    table_md = build_table_markdown(grouped)
+    table_md = build_table_markdown(files)
     text = README_PATH.read_text(encoding="utf-8")
     updated = replace_marked_block(text, table_md)
     if updated != text:

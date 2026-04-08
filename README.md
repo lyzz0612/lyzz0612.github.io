@@ -1,28 +1,26 @@
 ---
-title: "lyzz0612.github.io"
-description: "GitHub Pages 站点说明：面向人类与 Agent 的仓库导览、维护约定与文章列表索引。"
+title: "Agent文档平台"
+description: "lyzz0612.github.io：GitHub Pages 站点说明、llms.txt 自动生成规则与维护约定。"
 date: 2026-04-08
 layout: default
 ---
 
-# lyzz0612.github.io
+# Agent文档平台
 
-本仓库为 [GitHub Pages](https://pages.github.com/) 站点源码。**本文档同时面向人类读者与自动化 Agent**（代码助手、CI、检索工具等）：人类可据此了解站点结构与内容索引；Agent 可据此定位页面、更新列表、避免重复劳动。若你正在协助维护本仓库，请先阅读本节与下方「文章列表」，再修改对应文件。
+本仓库为 **`https://lyzz0612.github.io/`**，内容同时面向人类读者与自动化 Agent（代码助手、CI、检索工具等）。
 
-## 给 Agent 的简要说明
+## llms.txt（大模型索引）
 
-- **仓库用途**：个人站点 / 博客的托管与发布。
-- **优先查阅**：下方「文章列表」为站内可导航内容的权威索引之一；新增、重命名或删除文章后，应同步更新该列表（路径、标题、日期）。
-- **站点根 URL**：`https://lyzz0612.github.io/`（以实际 GitHub Pages 配置为准）。
+站点根路径提供符合 [llmstxt.org](https://llmstxt.org/) 约定的索引文件：
 
-## 文章列表
+- **在线地址**：[https://lyzz0612.github.io/llms.txt](https://lyzz0612.github.io/llms.txt)
 
-> 按时间倒序排列（新在前）。发布新文章时请在本表增加一行，并确保链接可访问。
+**生成方式**：由 `scripts/generate_llms_txt.py` 扫描仓库生成；推送 `main` / `master` 时，工作流 [`.github/workflows/pages.yml`](.github/workflows/pages.yml) 会在构建阶段运行该脚本，再将静态文件部署到 Pages，因此线上 **`/llms.txt` 以 CI 构建结果为准**。
+
+## 文章列表（人工备忘，可选）
+
+> 以下为可选的手工表格，便于写稿计划；**对外机器可读索引以 `llms.txt` 为准**。
 
 | 标题 | 路径或 URL | 日期 |
 |------|------------|------|
 | （暂无） | — | — |
-
----
-
-*若你为人类读者：欢迎直接浏览上表链接；若为 Agent：请在完成内容变更后更新「文章列表」表格以保持索引一致。*

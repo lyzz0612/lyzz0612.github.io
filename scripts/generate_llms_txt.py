@@ -5,11 +5,13 @@
 版式遵循 https://llmstxt.org/ ：H1、引用摘要、若干 ## 小节，小节内为
 `- [链接文字](URL): 可选说明` 列表。
 
-**分区规则**：按文件所在目录分组，「仓库根目录」一节 + 每个子目录一节（路径如 `notes`、`docs/guide`）。
-同一目录下的 `.md` / `.html` 列在同一 `##` 标题下。
+**分区规则**：只按**第一层目录**分组——根目录文件一节「根目录」，`foo/bar/b.md` 与 `foo/x/y.md` 同属 `## foo`。
 
-**标题**：对 `.md` 优先读 front matter 的 `title`，否则用正文首个 `#`；`.html` 优先 front matter `title`，否则 `<title>`；
-列表项只输出链接标题，不使用 `description`。
+**Markdown**：必须带页首 YAML front matter（`---` … `---`），否则忽略该 `.md`。
+
+**标题**：`.md` 读 front matter `title`，缺省则用正文首个 `#`；`.html` / `.htm` 仍收录，标题为 front matter `title` 或 `<title>`。
+
+列表项只输出 `- [标题](URL)`，无 description。
 
 环境变量：
   LLMS_TXT_PATH   输出路径，默认仓库根目录 llms.txt
@@ -31,6 +33,17 @@ SKIP_DIR_PARTS = frozenset({".git", "node_modules", "vendor", ".venv", "venv"})
 DOC_SUFFIXES = {".md", ".html", ".htm"}
 
 
+def has_front_matter_fence(text: str) -> bool:
+    """页首存在成对的 `---` / `---`（YAML front matter 外壳）。"""
+    lines = text.splitlines()
+    if not lines or lines[0].strip() != "---":
+        return False
+    for line in lines[1:]:
+        if line.strip() == "---":
+            return True
+    return False
+
+
 def iter_doc_files(root: Path) -> list[Path]:
     found: list[Path] = []
     for p in root.rglob("*"):
@@ -41,23 +54,36 @@ def iter_doc_files(root: Path) -> list[Path]:
             continue
         if p.name == "llms.txt":
             continue
-        if p.suffix.lower() in DOC_SUFFIXES:
-            found.append(p)
+        suf = p.suffix.lower()
+        if suf not in DOC_SUFFIXES:
+            continue
+        if suf == ".md":
+            try:
+                text = p.read_text(encoding="utf-8", errors="replace")
+            except OSError:
+                continue
+            if not has_front_matter_fence(text):
+                continue
+        found.append(p)
     return sorted(found, key=lambda x: x.as_posix().lower())
 
 
-def parent_dir_key(path: Path, root: Path) -> str:
-    """相对仓库根的路径目录段；根目录文件为 ''（含 Windows 下 parent 为 `.` 的情况）。"""
+def top_level_dir_key(path: Path, root: Path) -> str:
+    """
+    仅按第一层目录分组：根下文件为 ''；`foo/a.md` 与 `foo/x/y.md` 的键均为 `foo`。
+    """
     rel = path.relative_to(root)
-    p = rel.parent.as_posix()
-    return "" if p in ("", ".") else p
+    parts = rel.parts
+    if len(parts) <= 1:
+        return ""
+    return parts[0]
 
 
 def group_by_directory(files: list[Path]) -> list[tuple[str, list[Path]]]:
-    """按父目录分组，返回 [(dir_key, paths), ...]，根目录键 '' 优先，其余按路径排序。"""
+    """按第一层目录分组，返回 [(dir_key, paths), ...]，根目录键 '' 优先，其余按目录名排序。"""
     buckets: dict[str, list[Path]] = defaultdict(list)
     for f in files:
-        buckets[parent_dir_key(f, ROOT)].append(f)
+        buckets[top_level_dir_key(f, ROOT)].append(f)
     for k in buckets:
         buckets[k].sort(key=lambda p: p.as_posix().lower())
     keys = sorted(buckets.keys(), key=lambda s: ("\0" if s == "" else s))
@@ -152,7 +178,7 @@ def build_llms_text(grouped: list[tuple[str, list[Path]]]) -> str:
     lines = [
         "# lyzz0612.github.io",
         "",
-        "> GitHub Pages 站点。按 llmstxt.org 约定：每个 `##` 对应仓库内一个目录（根目录或子路径），其下列出该目录中的页面链接。",
+        "> GitHub Pages 站点。按 llmstxt.org 约定：每个 `##` 对应**第一层目录**（或根目录）；`.md` 须含 YAML front matter，否则不收录。",
         "",
     ]
     if not grouped:
@@ -160,7 +186,7 @@ def build_llms_text(grouped: list[tuple[str, list[Path]]]) -> str:
             [
                 "## 根目录",
                 "",
-                "- （当前仓库未发现 `.md` / `.html` 文档，或均被排除规则跳过。）",
+                "- （当前仓库未发现符合条件的文档：`.md` 需含 front matter；或均被排除规则跳过。）",
                 "",
             ]
         )

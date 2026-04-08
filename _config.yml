@@ -1,10 +1,9 @@
 title: Agent文档平台
 description: "面向读者与自动化 Agent 的文档站点"
 url: "https://agent-doc.skyup.top"
-markdown: kramdown
-# 管道表格需 GFM，否则首页 README 里表格会整段当成普通文本
-kramdown:
-  input: GFM
+# GitHub Pages 会将 GFM 映射为 CommonMarkGhPages（cmark-gfm），与 github.com 上 Markdown 一致；
+# 仅用 kramdown 时即使用 input:GFM 也属于“模拟 GFM”，复杂表格/注释边界可能与预期不符。
+markdown: GFM
 exclude:
   - scripts
   - Gemfile

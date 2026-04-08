@@ -59,7 +59,8 @@ def replace_marked_block(readme_text: str, new_block_body: str) -> str:
         re.escape(MARKER_START) + r"\s*.*?\s*" + re.escape(MARKER_END),
         re.DOTALL,
     )
-    replacement = f"{MARKER_START}\n{new_block_body}\n{MARKER_END}"
+    # 标记块与表格之间空一行，避免 HTML 注释与 GFM 表格紧挨时部分解析器吞掉表格
+    replacement = f"{MARKER_START}\n\n{new_block_body}\n{MARKER_END}"
     if not pattern.search(readme_text):
         raise ValueError(
             f"README 中未找到标记块 {MARKER_START!r} … {MARKER_END!r}"

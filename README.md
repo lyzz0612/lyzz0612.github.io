@@ -24,6 +24,7 @@ permalink: /
 > 下表由 [`scripts/update_readme_articles.py`](https://github.com/lyzz0612/lyzz0612.github.io/blob/master/scripts/update_readme_articles.py) 按与 `llms.txt` 相同的收录规则生成；推送 `main` / `master` 时由 [`.github/workflows/pages.yml`](https://github.com/lyzz0612/lyzz0612.github.io/blob/master/.github/workflows/pages.yml) 更新并提交。「页面地址」列为**站点上可打开的 URL**（对应 Jekyll 输出的 `.html`）。
 
 <!-- doc-index:article-table -->
+
 | 标题 | 页面地址 | 修改时间 |
 |------|----------|----------|
 | PSD 切图工作流 | [skills/psd-slicing/SKILL.html](https://agent-doc.skyup.top/skills/psd-slicing/SKILL.html) | 2026-04-08 |

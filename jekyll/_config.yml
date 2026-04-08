@@ -1,0 +1,7 @@
+# 仅用于 CI：actions/jekyll-build-pages 由此目录生成站点根路径 index.html
+title: "Agent文档平台"
+description: "面向读者与自动化 Agent 的文档与 llms.txt 索引"
+baseurl: ""
+url: "https://lyzz0612.github.io"
+markdown: kramdown
+theme: minima

@@ -1,5 +1,6 @@
 # 使用 GitHub Actions 构建并发布站点（含生成 llms.txt）。
 # 仓库 Settings → Pages → Build and deployment → Source 请选择「GitHub Actions」。
+# 与官方约定对齐：https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages
 name: Deploy GitHub Pages
 
 on:
@@ -21,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Sync README article table
         run: python3 scripts/update_readme_articles.py
@@ -41,17 +42,30 @@ jobs:
       - name: Generate llms.txt
         run: python3 scripts/generate_llms_txt.py
 
-      - name: Assemble static site
+      # 首页：GitHub 官方 Jekyll 构建（与 Pages 兼容），源在 jekyll/，见 actions/jekyll-build-pages
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v5
+
+      - name: Build index with Jekyll (GitHub Pages)
+        uses: actions/jekyll-build-pages@v1
+        with:
+          source: ./jekyll
+          destination: ./_site
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Merge repo assets into site
         run: |
-          mkdir -p _site
           rsync -a \
             --exclude='.git' \
             --exclude='.github' \
             --exclude='scripts' \
+            --exclude='jekyll' \
+            --exclude='_site' \
             . _site/
 
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           path: _site
 

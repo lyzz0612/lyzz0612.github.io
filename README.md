@@ -17,10 +17,12 @@ layout: default
 
 **生成方式**：由 `scripts/generate_llms_txt.py` 扫描仓库生成；推送 `main` / `master` 时，工作流 [`.github/workflows/pages.yml`](.github/workflows/pages.yml) 会在构建阶段运行该脚本，再将静态文件部署到 Pages，因此线上 **`/llms.txt` 以 CI 构建结果为准**。
 
-## 文章列表（人工备忘，可选）
+## 文章列表（CI 自动同步）
 
-> 以下为可选的手工表格，便于写稿计划；**对外机器可读索引以 `llms.txt` 为准**。
+> 下表由 [`scripts/update_readme_articles.py`](scripts/update_readme_articles.py) 按与 `llms.txt` 相同的收录规则生成；推送 `main` / `master` 时由 [`.github/workflows/pages.yml`](.github/workflows/pages.yml) 更新并提交。**对外机器可读索引仍以站点根路径 [`/llms.txt`](https://lyzz0612.github.io/llms.txt) 为准**。
 
+<!-- doc-index:article-table -->
 | 标题 | 路径或 URL | 日期 |
 |------|------------|------|
-| （暂无） | — | — |
+| PSD 切图工作流 | [skills/psd-slicing/SKILL.md](https://lyzz0612.github.io/skills/psd-slicing/SKILL.md) | — |
+<!-- /doc-index:article-table -->

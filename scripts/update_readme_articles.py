@@ -1,0 +1,87 @@
+#!/usr/bin/env python3
+"""
+根据与 llms.txt 相同的收录规则，更新 README.md 中「文章列表」表格（标记块内）。
+排除仓库根目录的 README.md 自身。
+"""
+
+from __future__ import annotations
+
+import re
+import sys
+from pathlib import Path
+
+# 与 generate_llms_txt 同目录，保证 `python3 scripts/update_readme_articles.py` 可导入 doc_index
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from doc_index import (  # noqa: E402
+    ROOT,
+    group_by_directory,
+    iter_doc_files,
+    page_date,
+    page_title,
+    page_url,
+)
+
+README_PATH = ROOT / "README.md"
+BASE_URL = "https://lyzz0612.github.io".rstrip("/")
+
+MARKER_START = "<!-- doc-index:article-table -->"
+MARKER_END = "<!-- /doc-index:article-table -->"
+
+
+def _escape_cell(s: str) -> str:
+    return s.replace("|", "\\|").replace("\n", " ")
+
+
+def build_table_markdown(grouped: list[tuple[str, list[Path]]]) -> str:
+    lines = [
+        "| 标题 | 路径或 URL | 日期 |",
+        "|------|------------|------|",
+    ]
+    if not grouped:
+        lines.append("| （暂无） | — | — |")
+        return "\n".join(lines)
+
+    for _dir_key, paths in grouped:
+        for f in paths:
+            rel = f.relative_to(ROOT).as_posix()
+            title = _escape_cell(page_title(f))
+            url = page_url(rel, BASE_URL)
+            date = _escape_cell(page_date(f))
+            lines.append(f"| {title} | [{rel}]({url}) | {date} |")
+    return "\n".join(lines)
+
+
+def replace_marked_block(readme_text: str, new_block_body: str) -> str:
+    pattern = re.compile(
+        re.escape(MARKER_START) + r"\s*.*?\s*" + re.escape(MARKER_END),
+        re.DOTALL,
+    )
+    replacement = f"{MARKER_START}\n{new_block_body}\n{MARKER_END}"
+    if not pattern.search(readme_text):
+        raise ValueError(
+            f"README 中未找到标记块 {MARKER_START!r} … {MARKER_END!r}"
+        )
+    return pattern.sub(replacement, readme_text, count=1)
+
+
+def main() -> int:
+    files = [
+        f
+        for f in iter_doc_files(ROOT)
+        if f.resolve() != (ROOT / "README.md").resolve()
+    ]
+    grouped = group_by_directory(files)
+    table_md = build_table_markdown(grouped)
+    text = README_PATH.read_text(encoding="utf-8")
+    updated = replace_marked_block(text, table_md)
+    if updated != text:
+        README_PATH.write_text(updated, encoding="utf-8", newline="\n")
+        print(f"Updated {README_PATH} ({len(files)} article(s))")
+    else:
+        print(f"No changes to {README_PATH}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

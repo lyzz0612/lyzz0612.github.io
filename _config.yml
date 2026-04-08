@@ -1,0 +1,9 @@
+title: Agent文档平台
+description: "面向读者与自动化 Agent 的文档站点"
+url: "https://lyzz0612.github.io"
+markdown: kramdown
+exclude:
+  - scripts
+  - Gemfile
+  - Gemfile.lock
+  - "*.py"

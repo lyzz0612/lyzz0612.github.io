@@ -20,6 +20,9 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      # llms.txt / README 表格中的站点链接（与 CNAME 一致）
+      SITE_BASE_URL: https://agent-doc.skyup.top
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -51,6 +54,10 @@ jobs:
         with:
           source: ./
           destination: ./_site
+
+      # Jekyll 把 README 编成首页后，再保留一份源 Markdown 供 /README.md 与 Agent 拉取
+      - name: Publish README.md source alongside site
+        run: cp README.md _site/README.md
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v4

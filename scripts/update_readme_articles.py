@@ -14,15 +14,16 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from doc_index import (  # noqa: E402
+    DEFAULT_SITE_BASE_URL,
     ROOT,
     iter_doc_files,
     page_last_modified,
     page_title,
-    page_url,
+    site_page_url,
 )
 
 README_PATH = ROOT / "README.md"
-BASE_URL = "https://lyzz0612.github.io".rstrip("/")
+BASE_URL = DEFAULT_SITE_BASE_URL
 
 MARKER_START = "<!-- doc-index:article-table -->"
 MARKER_END = "<!-- /doc-index:article-table -->"
@@ -34,8 +35,8 @@ def _escape_cell(s: str) -> str:
 
 def build_table_markdown(files: list[Path]) -> str:
     lines = [
-        "| 标题 | 路径或 URL | 修改时间 |",
-        "|------|------------|----------|",
+        "| 标题 | 页面地址 | 修改时间 |",
+        "|------|----------|----------|",
     ]
     if not files:
         lines.append("| （暂无） | — | — |")
@@ -46,9 +47,10 @@ def build_table_markdown(files: list[Path]) -> str:
     for f in files_sorted:
         rel = f.relative_to(ROOT).as_posix()
         title = _escape_cell(page_title(f))
-        url = page_url(rel, BASE_URL)
+        url = site_page_url(rel, BASE_URL)
+        link_label = rel[:-3] + ".html" if rel.lower().endswith(".md") else rel
         modified = _escape_cell(page_last_modified(f))
-        lines.append(f"| {title} | [{rel}]({url}) | {modified} |")
+        lines.append(f"| {title} | [{_escape_cell(link_label)}]({url}) | {modified} |")
     return "\n".join(lines)
 
 

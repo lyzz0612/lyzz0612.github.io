@@ -1,6 +1,6 @@
 title: Agent文档平台
 description: "面向读者与自动化 Agent 的文档站点"
-url: "https://lyzz0612.github.io"
+url: "https://agent-doc.skyup.top"
 markdown: kramdown
 # 管道表格需 GFM，否则首页 README 里表格会整段当成普通文本
 kramdown:

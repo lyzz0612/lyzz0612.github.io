@@ -28,16 +28,17 @@ if str(_scripts_dir) not in sys.path:
     sys.path.insert(0, str(_scripts_dir))
 
 from doc_index import (
+    DEFAULT_SITE_BASE_URL,
     ROOT,
     group_by_directory,
     iter_doc_files,
     page_title,
-    page_url,
     section_heading,
+    site_page_url,
 )
 
 OUT = Path(os.environ.get("LLMS_TXT_PATH", str(ROOT / "llms.txt")))
-BASE_URL = "https://lyzz0612.github.io".rstrip("/")
+BASE_URL = DEFAULT_SITE_BASE_URL
 
 
 def build_llms_text(grouped: list[tuple[str, list[Path]]]) -> str:
@@ -63,7 +64,7 @@ def build_llms_text(grouped: list[tuple[str, list[Path]]]) -> str:
             for f in paths:
                 rel = f.relative_to(ROOT).as_posix()
                 label = page_title(f)
-                url = page_url(rel, BASE_URL)
+                url = site_page_url(rel, BASE_URL)
                 lines.append(f"- [{label}]({url})")
             lines.append("")
     return "\n".join(lines)

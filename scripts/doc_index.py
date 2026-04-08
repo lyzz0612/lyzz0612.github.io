@@ -5,9 +5,15 @@
 
 from __future__ import annotations
 
+import os
 import re
 from collections import defaultdict
 from pathlib import Path
+
+# 站点在浏览器中的根 URL（自定义域名或 *.github.io），供 llms / README 表格链接使用
+DEFAULT_SITE_BASE_URL = os.environ.get(
+    "SITE_BASE_URL", "https://agent-doc.skyup.top"
+).rstrip("/")
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -169,4 +175,20 @@ def page_last_modified(path: Path) -> str:
 
 
 def page_url(rel_posix: str, base_url: str) -> str:
+    """仓库内相对路径对应的「源文件」URL（仍以 .md 结尾）。"""
     return f"{base_url.rstrip('/')}/{rel_posix}"
+
+
+def site_page_url(rel_posix: str, base_url: str | None = None) -> str:
+    """
+    Jekyll 构建后用于浏览器访问的 URL：`.md` → `.html`；
+    根目录 `README.md` 使用站点首页 `/`（permalink）。
+    """
+    base = (base_url or DEFAULT_SITE_BASE_URL).rstrip("/")
+    rel = rel_posix.replace("\\", "/").strip("/")
+    parts = rel.split("/")
+    if parts and parts[-1].lower() == "readme.md":
+        return f"{base}/"
+    if rel.lower().endswith(".md"):
+        rel = rel[:-3] + ".html"
+    return f"{base}/{rel}"

@@ -35,6 +35,9 @@ def iter_doc_files(root: Path) -> list[Path]:
             continue
         if p.name == "llms.txt":
             continue
+        # 站点入口页，不参与 llms.txt / README 文章表
+        if rel.as_posix() == "index.html":
+            continue
         suf = p.suffix.lower()
         if suf not in DOC_SUFFIXES:
             continue

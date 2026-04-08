@@ -11,7 +11,7 @@
 
 **标题**：`.md` 读 front matter `title`，缺省则用正文首个 `#`；`.html` / `.htm` 仍收录，标题为 front matter `title` 或 `<title>`。
 
-列表项只输出 `- [标题](URL)`，无 description。
+列表项只输出 `- [标题](URL)`，无 description。链接使用仓库内相对路径对应的 **`.md` / 源文件 URL**（与 `doc_index.page_url` 一致），不改为 `.html`。
 
 环境变量：
   LLMS_TXT_PATH   输出路径，默认仓库根目录 llms.txt
@@ -33,8 +33,8 @@ from doc_index import (
     group_by_directory,
     iter_doc_files,
     page_title,
+    page_url,
     section_heading,
-    site_page_url,
 )
 
 OUT = Path(os.environ.get("LLMS_TXT_PATH", str(ROOT / "llms.txt")))
@@ -64,7 +64,7 @@ def build_llms_text(grouped: list[tuple[str, list[Path]]]) -> str:
             for f in paths:
                 rel = f.relative_to(ROOT).as_posix()
                 label = page_title(f)
-                url = site_page_url(rel, BASE_URL)
+                url = page_url(rel, BASE_URL)
                 lines.append(f"- [{label}]({url})")
             lines.append("")
     return "\n".join(lines)
